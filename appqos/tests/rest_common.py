@@ -168,10 +168,7 @@ def get_config_mba_bw():
 
 
 def get_max_cos_id(alloc_tech):
-    if 'mba' in alloc_tech:
-        return 8
-
-    return 16
+    return 8 if 'mba' in alloc_tech else 16
 
 
 def load_json_schema(filename):
@@ -196,16 +193,16 @@ class Rest:
     def get(self, url):
         response = self.client.get(url, headers={'Authorization': _basic_auth_str("user", "password")})
 
-        LOG.info((">>> response code {}").format(response.status_code))
-        LOG.info((">>> response data {}").format(response.data))
+        LOG.info(f">>> response code {response.status_code}")
+        LOG.info(f">>> response data {response.data}")
 
         return response
 
     def delete(self, url):
         response =  self.client.delete(url, headers={'Authorization': _basic_auth_str("user", "password")})
 
-        LOG.info((">>> response code {}").format(response.status_code))
-        LOG.info((">>> response data {}").format(response.data))
+        LOG.info(f">>> response code {response.status_code}")
+        LOG.info(f">>> response data {response.data}")
 
         return response
 
@@ -215,8 +212,8 @@ class Rest:
             'Content-Type': 'application/json'
         })
 
-        LOG.info((">>> response code {}").format(response.status_code))
-        LOG.info((">>> response data {}").format(response.data))
+        LOG.info(f">>> response code {response.status_code}")
+        LOG.info(f">>> response data {response.data}")
 
         return response
 
@@ -226,8 +223,8 @@ class Rest:
             'Content-Type': 'application/json'
         })
 
-        LOG.info((">>> response code {}").format(response.status_code))
-        LOG.info((">>> response data {}").format(response.data))
+        LOG.info(f">>> response code {response.status_code}")
+        LOG.info(f">>> response data {response.data}")
 
         return response
 

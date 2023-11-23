@@ -58,11 +58,10 @@ class PqosDevInfoMockBuilder:
     def build_channels(self):  # pylint: disable=no-self-use
         "Builds channel information."
 
-        channels = []
         channel = CPqosChannel(channel_id=0x10100, rmid_tagging=True,
                                clos_tagging=True, min_rmid=1, max_rmid=10,
                                min_clos=1, max_clos=10)
-        channels.append(channel)
+        channels = [channel]
         channel = CPqosChannel(channel_id=0x20200, rmid_tagging=False,
                                clos_tagging=True, min_rmid=1, max_rmid=8,
                                min_clos=2, max_clos=12)
@@ -72,15 +71,13 @@ class PqosDevInfoMockBuilder:
     def build_devices(self):  # pylint: disable=no-self-use
         "Builds device information."
 
-        devices = []
         dev = CPqosDev(type=CPqosDevType.PQOS_DEVICE_TYPE_PCI,
                        segment=1, bdf=2)
         dev.channel[0] = 0x10100
         for i in range(1, PQOS_DEV_MAX_CHANNELS):
             dev.channel[i] = 0
 
-        devices.append(dev)
-        return devices
+        return [dev]
 
     def build(self):
         "Builds device information and returns a pointer to that object."

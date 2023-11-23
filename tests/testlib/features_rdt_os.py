@@ -43,10 +43,7 @@ class FeaturesRdtOs(FeaturesRdt):
         if not self.resctrl.is_mounted():
             return False
 
-        if not self.resctrl.info_dir_exists(dir_name):
-            return False
-
-        return True
+        return bool(self.resctrl.info_dir_exists(dir_name))
 
     def is_l2_cat_supported(self):
         self.resctrl.umount()

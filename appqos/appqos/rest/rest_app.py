@@ -169,7 +169,7 @@ class App(Resource):
                 # add app id to new pool
                 for pool in data['pools']:
                     if pool['id'] == int(pool_id):
-                        if not 'apps' in pool:
+                        if 'apps' not in pool:
                             pool['apps'] = []
                         pool['apps'].append(app['id'])
                         break
@@ -293,7 +293,7 @@ class Apps(Resource):
             raise BadRequest(f"New APP not added, {ex}") from ex
 
         # update pool configuration to include new app
-        if not 'apps' in pool:
+        if 'apps' not in pool:
             pool['apps'] = []
         pool['apps'].append(json_data['id'])
 

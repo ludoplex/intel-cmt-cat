@@ -202,8 +202,8 @@ def test_config_default_pool_cat():
     for pool in config['pools']:
         if pool['id'] == 0:
             assert 'l3cbm' in pool
-            assert not 'mba' in pool
-            assert not 'mba_bw' in pool
+            assert 'mba' not in pool
+            assert 'mba_bw' not in pool
             pool_cbm = pool['l3cbm']
             break
 
@@ -236,10 +236,10 @@ def test_config_default_pool_l2cat():
     for pool in config['pools']:
         if pool['id'] == 0:
             assert 'l2cbm' in pool
-            assert not 'cbm' in pool
-            assert not 'l3cbm' in pool
-            assert not 'mba' in pool
-            assert not 'mba_bw' in pool
+            assert 'cbm' not in pool
+            assert 'l3cbm' not in pool
+            assert 'mba' not in pool
+            assert 'mba_bw' not in pool
             pool_l2cbm = pool['l2cbm']
             break
 
@@ -276,11 +276,11 @@ def test_config_default_pool_l2cdp():
         if pool['id'] == 0:
             assert 'l2cbm_code' in pool
             assert 'l2cbm_data' in pool
-            assert not 'cbm' in pool
+            assert 'cbm' not in pool
             assert 'l2cbm' in pool
-            assert not 'l3cbm' in pool
-            assert not 'mba' in pool
-            assert not 'mba_bw' in pool
+            assert 'l3cbm' not in pool
+            assert 'mba' not in pool
+            assert 'mba_bw' not in pool
             pool_l2cbm_code = pool['l2cbm_code']
             pool_l2cbm_data = pool['l2cbm_data']
             break
@@ -319,11 +319,11 @@ def test_config_default_pool_l3cdp():
         if pool['id'] == 0:
             assert 'l3cbm_code' in pool
             assert 'l3cbm_data' in pool
-            assert not 'cbm' in pool
-            assert not 'l2cbm' in pool
+            assert 'cbm' not in pool
+            assert 'l2cbm' not in pool
             assert 'l3cbm' in pool
-            assert not 'mba' in pool
-            assert not 'mba_bw' in pool
+            assert 'mba' not in pool
+            assert 'mba_bw' not in pool
             pool_l3cbm_code = pool['l3cbm_code']
             pool_l3cbm_data = pool['l3cbm_data']
             break
@@ -357,8 +357,8 @@ def test_config_default_pool_mba():
 
     for pool in config['pools']:
         if pool['id'] == 0:
-            assert not 'cat' in pool
-            assert not 'mba_bw' in pool
+            assert 'cat' not in pool
+            assert 'mba_bw' not in pool
             pool_mba = pool['mba']
             break
 
@@ -391,10 +391,10 @@ def test_config_default_pool_mba_bw():
 
     for pool in config['pools']:
         if pool['id'] == 0:
-            assert not 'mba' in pool
-            assert not 'cbm' in pool
-            assert not 'l3cbm' in pool
-            assert not 'l2cbm' in pool
+            assert 'mba' not in pool
+            assert 'cbm' not in pool
+            assert 'l3cbm' not in pool
+            assert 'l2cbm' not in pool
             pool_mba_bw = pool['mba_bw']
             break
 
@@ -464,7 +464,7 @@ def test_config_is_any_pool_defined():
 
     for pool in config['pools'][:]:
         print(pool)
-        if not pool['id'] == 0:
+        if pool['id'] != 0:
             config['pools'].remove(pool)
 
     print(config)

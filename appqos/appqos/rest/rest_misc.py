@@ -131,7 +131,7 @@ class Sstbf(Resource):
         except (jsonschema.ValidationError, OverflowError) as error:
             raise BadRequest(f"Request validation failed - {error}") from error
 
-        if not sstbf.configure_sstbf(json_data['configured']) == 0:
+        if sstbf.configure_sstbf(json_data['configured']) != 0:
             raise InternalError("Failed to change SST-BF configured state.")
 
         # update power profile configuration

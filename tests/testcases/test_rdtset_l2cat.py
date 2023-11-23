@@ -138,7 +138,7 @@ class TestRdtsetL2Cat(test.Test):
         # Get cores from the same socket, but different cluster
         # The same L3 ID (MBA ID or socket), different L2 ID (cluster)
         cores = []
-        for _, l3id_info in topology.items():
+        for l3id_info in topology.values():
             for l2id, l2id_cores in l3id_info['l2ids'].items():
                 if len(cores) >= 2:
                     break

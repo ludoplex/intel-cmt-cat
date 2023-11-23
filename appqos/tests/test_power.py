@@ -315,10 +315,10 @@ class TestRestPowerProfiles:
         }
 
         with mock.patch('appqos.power._is_max_freq_valid', return_value = True) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power._admission_control_check', return_value = True) as mock_admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power._admission_control_check', return_value = True) as mock_admission_control_check:
 
             with pytest.raises(ValueError, match="Power Profile 0, multiple profiles with same id."):
                 power.validate_power_profiles(data, True)
@@ -328,10 +328,10 @@ class TestRestPowerProfiles:
         data['power_profiles'][-1]['id'] = 1
 
         with mock.patch('appqos.power._is_max_freq_valid', return_value = True) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
 
             power.validate_power_profiles(data, True)
 
@@ -348,20 +348,20 @@ class TestRestPowerProfiles:
 
 
         with mock.patch('appqos.power._is_max_freq_valid', return_value = True) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = False),\
-            mock.patch('appqos.power._admission_control_check') as mock__admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = False),\
+                mock.patch('appqos.power._admission_control_check') as mock__admission_control_check:
 
             power.validate_power_profiles(data, True)
             mock__admission_control_check.assert_not_called()
 
 
         with mock.patch('appqos.power._is_max_freq_valid', return_value = True) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power._admission_control_check') as mock__admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power._admission_control_check') as mock__admission_control_check:
 
             power.validate_power_profiles(data, False)
             mock__admission_control_check.assert_not_called()
@@ -376,24 +376,16 @@ class TestRestPowerProfiles:
             core = mock.MagicMock()
             core.core_id = id
             cores.append(core)
-        data.update({
-                    "pools": [
-                    {
-                        "id": 0,
-                        "cores": [0,1,2,3],
-                        "power_profile": 0
-                    },
-                    {
-                        "id": 1,
-                        "cores": [4,5,6,7]
-                    }]
-        })
+        data["pools"] = [
+            {"id": 0, "cores": [0, 1, 2, 3], "power_profile": 0},
+            {"id": 1, "cores": [4, 5, 6, 7]},
+        ]
         with mock.patch('appqos.power._is_max_freq_valid', return_value = True) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power_common.get_pwr_cores', return_value=cores) as mock_get_cores,\
-            mock.patch('appqos.power_common.get_pwr_sys', return_value=sys) as mock_get_sys:
+                mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power_common.get_pwr_cores', return_value=cores) as mock_get_cores,\
+                mock.patch('appqos.power_common.get_pwr_sys', return_value=sys) as mock_get_sys:
 
             power.validate_power_profiles(data, True)
             sys.request_config.assert_called_once()
@@ -408,11 +400,11 @@ class TestRestPowerProfiles:
         sys.request_config = mock.MagicMock(return_value=False)
         sys.refresh_all.reset_mock()
         with mock.patch('appqos.power._is_max_freq_valid', return_value = True) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power_common.get_pwr_cores', return_value=cores) as mock_get_cores,\
-            mock.patch('appqos.power_common.get_pwr_sys', return_value=sys) as mock_get_sys:
+                mock.patch('appqos.power._is_min_freq_valid', return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power_common.get_pwr_cores', return_value=cores) as mock_get_cores,\
+                mock.patch('appqos.power_common.get_pwr_sys', return_value=sys) as mock_get_sys:
 
             with pytest.raises(power.AdmissionControlError, match="Power Profiles configuration would cause CPU to be oversubscribed."):
                 power.validate_power_profiles(data, True)
@@ -421,10 +413,10 @@ class TestRestPowerProfiles:
 
 
         with mock.patch('appqos.power._is_max_freq_valid',  return_value = False ) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid',  return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid',  return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
 
             with pytest.raises(ValueError, match="Power Profile 0, Invalid max. freq 2500."):
                 power.validate_power_profiles(data, True)
@@ -432,10 +424,10 @@ class TestRestPowerProfiles:
 
 
         with mock.patch('appqos.power._is_max_freq_valid',  return_value = True ) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid',  return_value = False) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid',  return_value = False) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
 
             with pytest.raises(ValueError, match="Power Profile 0, Invalid min. freq 1500."):
                 power.validate_power_profiles(data, True)
@@ -443,10 +435,10 @@ class TestRestPowerProfiles:
 
 
         with mock.patch('appqos.power._is_max_freq_valid',  return_value = True ) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid',  return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = False) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid',  return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = False) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
 
             with pytest.raises(ValueError, match="Power Profile 0, Invalid EPP value performance."):
                 power.validate_power_profiles(data, True)
@@ -457,10 +449,10 @@ class TestRestPowerProfiles:
         data['power_profiles'][-1]['min_freq'] = data['power_profiles'][-1]['max_freq'] + 1
 
         with mock.patch('appqos.power._is_max_freq_valid',  return_value = True) as mock_is_max,\
-            mock.patch('appqos.power._is_min_freq_valid',  return_value = True) as mock_is_min,\
-            mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
-            mock.patch('appqos.power._do_admission_control_check', return_value = True),\
-            mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
+                mock.patch('appqos.power._is_min_freq_valid',  return_value = True) as mock_is_min,\
+                mock.patch('appqos.power._is_epp_valid', return_value = True) as mock_is_epp,\
+                mock.patch('appqos.power._do_admission_control_check', return_value = True),\
+                mock.patch('appqos.power._admission_control_check', return_value = True) as mock__admission_control_check:
 
             with pytest.raises(ValueError, match="Power Profile 1, Invalid freqs! min. freq is higher than max. freq."):
                 power.validate_power_profiles(data, True)
@@ -478,18 +470,11 @@ class TestRestPowerProfiles:
 
         def get_pool_attr(cls, attr, pool_id):
             if attr == 'id':
-                if pool_id is None:
-                    return pool_ids
-                else:
-                    return None
+                return pool_ids if pool_id is None else None
             elif attr == 'cores':
                 return pool_to_cores[pool_id]
             elif attr == 'power_profile':
-                if pool_id is None:
-                    return profile_ids
-                else:
-                    return pool_to_profiles[pool_id]
-
+                return profile_ids if pool_id is None else pool_to_profiles[pool_id]
             return None
 
         def get_power_profile(cls, id):
@@ -498,9 +483,9 @@ class TestRestPowerProfiles:
         # ERROR POWER: No Pools configured...
         power.PREV_PROFILES.clear()
         with mock.patch('appqos.config.Config.get_pool_attr', return_value=None) as mock_get_pool_attr,\
-            mock.patch('appqos.config.Config.get_power_profile') as mock_get_power_profile,\
-            mock.patch('appqos.power.reset') as mock_reset,\
-            mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
+                mock.patch('appqos.config.Config.get_power_profile') as mock_get_power_profile,\
+                mock.patch('appqos.power.reset') as mock_reset,\
+                mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
 
             assert -1 == power.configure_power(Config({}))
             mock_get_pool_attr.assert_called_once_with('id', None)
@@ -511,9 +496,9 @@ class TestRestPowerProfiles:
         # ERROR POWER: Profile 5 does not exist!
         power.PREV_PROFILES.clear()
         with mock.patch('appqos.config.Config.get_pool_attr', new=get_pool_attr),\
-            mock.patch('appqos.config.Config.get_power_profile', return_value=None) as mock_get_power_profile,\
-            mock.patch('appqos.power.reset') as mock_reset,\
-            mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
+                mock.patch('appqos.config.Config.get_power_profile', return_value=None) as mock_get_power_profile,\
+                mock.patch('appqos.power.reset') as mock_reset,\
+                mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
 
             assert -1 == power.configure_power(Config({}))
             mock_get_power_profile.assert_called_once_with(5)
@@ -523,9 +508,9 @@ class TestRestPowerProfiles:
         # All OK!
         power.PREV_PROFILES.clear()
         with mock.patch('appqos.config.Config.get_pool_attr', new=get_pool_attr),\
-             mock.patch('appqos.config.Config.get_power_profile', new=get_power_profile),\
-             mock.patch('appqos.power.reset') as mock_reset,\
-             mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
+                 mock.patch('appqos.config.Config.get_power_profile', new=get_power_profile),\
+                 mock.patch('appqos.power.reset') as mock_reset,\
+                 mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
 
             assert 0 == power.configure_power(Config({}))
             mock_reset.assert_not_called()
@@ -536,9 +521,9 @@ class TestRestPowerProfiles:
         power.PREV_PROFILES.clear()
         pool_to_cores[0] = []
         with mock.patch('appqos.config.Config.get_pool_attr', new=get_pool_attr),\
-            mock.patch('appqos.config.Config.get_power_profile', new=get_power_profile),\
-            mock.patch('appqos.power.reset') as mock_reset,\
-            mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
+                mock.patch('appqos.config.Config.get_power_profile', new=get_power_profile),\
+                mock.patch('appqos.power.reset') as mock_reset,\
+                mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
 
             assert 0 == power.configure_power(Config({}))
             mock_reset.assert_not_called()
@@ -548,9 +533,9 @@ class TestRestPowerProfiles:
         power.PREV_PROFILES.clear()
         pool_to_profiles[1] = None
         with mock.patch('appqos.config.Config.get_pool_attr', new=get_pool_attr),\
-            mock.patch('appqos.config.Config.get_power_profile', new=get_power_profile),\
-            mock.patch('appqos.power.reset') as mock_reset,\
-            mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
+                mock.patch('appqos.config.Config.get_power_profile', new=get_power_profile),\
+                mock.patch('appqos.power.reset') as mock_reset,\
+                mock.patch('appqos.power._set_freqs_epp') as mock_set_freqs_epp:
 
             assert 0 == power.configure_power(Config({}))
             mock_reset.assert_called_once_with(pool_to_cores[1])

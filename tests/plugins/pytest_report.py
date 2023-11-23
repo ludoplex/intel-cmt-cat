@@ -45,8 +45,7 @@ def pytest_configure(config):
 
 
 def pytest_unconfigure(config):
-    report = getattr(config, 'report', None)
-    if report:
+    if report := getattr(config, 'report', None):
         del config.report
         config.pluginmanager.unregister(report)
 
@@ -77,9 +76,7 @@ class Result:
             return 'FAIL'
         if outcome == 'skipped':
             return 'SKIP'
-        if outcome == 'xfailed':
-            return 'XFAIL'
-        return ''
+        return 'XFAIL' if outcome == 'xfailed' else ''
 
 
 class TestReport:
@@ -118,11 +115,10 @@ class TestReport:
 
 
     def pytest_runtest_setup(self, item):
-        priority = item.get_closest_marker("priority")
-        if priority:
+        if priority := item.get_closest_marker("priority"):
             self.current_priority = priority.args[0]
         else:
-            msg = "Priority missing for " + item.nodeid
+            msg = f"Priority missing for {item.nodeid}"
             warnings.warn(pytest.PytestWarning(msg))
             self.current_priority = None
 

@@ -97,10 +97,7 @@ class Pool:
         self.pool = pool
 
         if self.pool not in Pool.pools:
-            Pool.pools[self.pool] = {}
-            Pool.pools[self.pool]['cores'] = []
-            Pool.pools[self.pool]['apps'] = []
-            Pool.pools[self.pool]['pids'] = []
+            Pool.pools[self.pool] = {'cores': [], 'apps': [], 'pids': []}
 
     def l2cbm_set(self, l2cbm):
         """
@@ -173,9 +170,7 @@ class Pool:
             cbm mask, 0 on error
         """
         l3cbm_data = Pool.pools[self.pool].get('l3cbm_data', None)
-        if l3cbm_data is not None:
-            return l3cbm_data
-        return self.l3cbm_get()
+        return l3cbm_data if l3cbm_data is not None else self.l3cbm_get()
 
     def l3cbm_get_code(self):
         """
@@ -185,9 +180,7 @@ class Pool:
             cbm mask, 0 on error
         """
         l3cbm_code = Pool.pools[self.pool].get('l3cbm_code', None)
-        if l3cbm_code is not None:
-            return l3cbm_code
-        return self.l3cbm_get()
+        return l3cbm_code if l3cbm_code is not None else self.l3cbm_get()
 
     def l2cbm_get(self):
         """
@@ -205,9 +198,7 @@ class Pool:
             cbm mask, 0 on error
         """
         l2cbm_data = Pool.pools[self.pool].get('l2cbm_data', None)
-        if l2cbm_data is not None:
-            return l2cbm_data
-        return self.l2cbm_get()
+        return l2cbm_data if l2cbm_data is not None else self.l2cbm_get()
 
     def l2cbm_get_code(self):
         """
@@ -217,9 +208,7 @@ class Pool:
             cbm mask, 0 on error
         """
         l2cbm_code = Pool.pools[self.pool].get('l2cbm_code', None)
-        if l2cbm_code is not None:
-            return l2cbm_code
-        return self.l2cbm_get()
+        return l2cbm_code if l2cbm_code is not None else self.l2cbm_get()
 
     def mba_set(self, mba):
         """
@@ -315,8 +304,7 @@ class Pool:
         if apps is not None:
             pids = []
             for app in apps:
-                app_pids = config.get_app_attr('pids', app)
-                if app_pids:
+                if app_pids := config.get_app_attr('pids', app):
                     pids.extend(app_pids)
 
             self.pids_set(pids, config.get_pool_attr('cores', 0))
@@ -343,7 +331,7 @@ class Pool:
             if pool_id == self.pool:
                 continue
             removed_pids = \
-                [pid for pid in removed_pids if pid not in Pool.pools[pool_id]['pids']]
+                    [pid for pid in removed_pids if pid not in Pool.pools[pool_id]['pids']]
 
         # remove pid form old pool
         if old_pids:
@@ -352,15 +340,14 @@ class Pool:
                 if pool_id == self.pool:
                     continue
 
-                pids_moved_from_other_pool = \
-                    [pid for pid in Pool.pools[pool_id]['pids'] if pid in pids]
-
-                if pids_moved_from_other_pool:
+                if pids_moved_from_other_pool := [
+                    pid for pid in Pool.pools[pool_id]['pids'] if pid in pids
+                ]:
                     log.debug(f"PIDs moved from other pools {pids_moved_from_other_pool}")
 
                 # update other pool PIDs
                 Pool.pools[pool_id]['pids'] = \
-                    [pid for pid in Pool.pools[pool_id]['pids'] if pid not in pids]
+                        [pid for pid in Pool.pools[pool_id]['pids'] if pid not in pids]
 
         Pool.pools[self.pool]['pids'] = pids
 
@@ -569,10 +556,7 @@ def configure_rdt(cfg):
                 if cfg_mba_ctrl_enabled == PQOS_API.is_mba_bw_enabled():
                     return "any"
 
-                if cfg_mba_ctrl_enabled:
-                    return "ctrl"
-                return "default"
-
+                return "ctrl" if cfg_mba_ctrl_enabled else "default"
             return "any"
 
         def get_l2cdp_cfg():
@@ -585,10 +569,7 @@ def configure_rdt(cfg):
                 if cfg_l2cdp_enabled == PQOS_API.is_l2_cdp_enabled():
                     return "any"
 
-                if cfg_l2cdp_enabled:
-                    return "on"
-                return "off"
-
+                return "on" if cfg_l2cdp_enabled else "off"
             return "any"
 
         def get_l3cdp_cfg():
@@ -601,10 +582,7 @@ def configure_rdt(cfg):
                 if cfg_l3cdp_enabled == PQOS_API.is_l3_cdp_enabled():
                     return "any"
 
-                if cfg_l3cdp_enabled:
-                    return "on"
-                return "off"
-
+                return "on" if cfg_l3cdp_enabled else "off"
             return "any"
 
         l3cdp_cfg = get_l3cdp_cfg()

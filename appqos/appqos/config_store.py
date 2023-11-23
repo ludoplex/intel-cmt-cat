@@ -116,7 +116,7 @@ class ConfigStore:
         Parameters
             data: configuration (dict)
         """
-        if not 'pools' in data:
+        if 'pools' not in data:
             return
 
         # verify pools
@@ -136,7 +136,7 @@ class ConfigStore:
 
             if cores.intersection(pool['cores']):
                 raise ValueError(f"Pool {pool['id']}, " \
-                    f"Cores {cores.intersection(pool['cores'])} already assigned to another pool.")
+                        f"Cores {cores.intersection(pool['cores'])} already assigned to another pool.")
 
             cores |= set(pool['cores'])
 
@@ -158,7 +158,7 @@ class ConfigStore:
         Parameters
             data: configuration (dict)
         """
-        if not 'apps' in data:
+        if 'apps' not in data:
             return
 
         # verify apps
@@ -189,10 +189,9 @@ class ConfigStore:
                 raise ValueError(f"App {app['id']} not assigned to any pool.")
 
             if 'cores' in app:
-                diff_cores = set(app['cores']).difference(app_pool['cores'])
-                if diff_cores:
+                if diff_cores := set(app['cores']).difference(app_pool['cores']):
                     raise ValueError(f"App {app['id']}, " \
-                        f"cores {diff_cores} does not match Pool {app_pool['id']}.")
+                            f"cores {diff_cores} does not match Pool {app_pool['id']}.")
 
             # app's pids validation
             for pid in app['pids']:
@@ -201,7 +200,7 @@ class ConfigStore:
 
             if pids.intersection(app['pids']):
                 raise ValueError(f"App {app['id']}, " \
-                    f"PIDs {pids.intersection(app['pids'])} already assigned to another App.")
+                        f"PIDs {pids.intersection(app['pids'])} already assigned to another App.")
 
             pids |= set(app['pids'])
 
@@ -225,21 +224,22 @@ class ConfigStore:
 
         for pool in data['pools']:
             for cbm in ['l3cbm', 'l3cbm_data', 'l3cbm_code']:
-                if not cbm in pool:
+                if cbm not in pool:
                     continue
 
                 if pool[cbm] == 0:
                     raise ValueError(f"Pool {pool['id']}, L3 CBM is zero.")
 
                 if not non_contiguous_cbm:
-                    result = re.search('1{1,32}0{1,32}1{1,32}', bin(pool[cbm]))
-                    if result:
+                    if result := re.search(
+                        '1{1,32}0{1,32}1{1,32}', bin(pool[cbm])
+                    ):
                         raise ValueError(f"Pool {pool['id']}, " \
-                            f"L3 CBM {hex(pool['l3cbm'])}/{bin(pool[cbm])} is not contiguous.")
+                                f"L3 CBM {hex(pool['l3cbm'])}/{bin(pool[cbm])} is not contiguous.")
 
                 if not caps.cat_l3_supported(iface):
                     raise ValueError(f"Pool {pool['id']}, " \
-                        f"L3 CBM {hex(pool['l3cbm'])}/{bin(pool[cbm])}, L3 CAT is not supported.")
+                            f"L3 CBM {hex(pool['l3cbm'])}/{bin(pool[cbm])}, L3 CAT is not supported.")
 
             if 'l3cbm_data' in pool or 'l3cbm_code' in pool:
                 cdp_pool_ids.append(pool['id'])
@@ -268,21 +268,22 @@ class ConfigStore:
 
         for pool in data['pools']:
             for cbm in ['l2cbm', 'l2cbm_data', 'l2cbm_code']:
-                if not cbm in pool:
+                if cbm not in pool:
                     continue
 
                 if pool[cbm] == 0:
                     raise ValueError(f"Pool {pool['id']}, L2 CBM is zero.")
 
                 if not non_contiguous_cbm:
-                    result = re.search('1{1,32}0{1,32}1{1,32}', bin(pool[cbm]))
-                    if result:
+                    if result := re.search(
+                        '1{1,32}0{1,32}1{1,32}', bin(pool[cbm])
+                    ):
                         raise ValueError(f"Pool {pool['id']}, " \
-                            f"L2 CBM {hex(pool['l2cbm'])}/{bin(pool[cbm])} is not contiguous.")
+                                f"L2 CBM {hex(pool['l2cbm'])}/{bin(pool[cbm])} is not contiguous.")
 
                 if not caps.cat_l2_supported(iface):
                     raise ValueError(f"Pool {pool['id']}, " \
-                        f"L2 CBM {hex(pool['l2cbm'])}/{bin(pool[cbm])}, L2 CAT is not supported.")
+                            f"L2 CBM {hex(pool['l2cbm'])}/{bin(pool[cbm])}, L2 CAT is not supported.")
 
             if 'l2cbm_data' in pool or 'l2cbm_code' in pool:
                 cdp_pool_ids.append(pool['id'])
@@ -307,9 +308,9 @@ class ConfigStore:
         # if data to be validated does not contain RDT iface and/or MBA CTRL info
         # get missing info from current configuration
         rdt_iface = data['rdt_iface']['interface'] if 'rdt_iface' in data \
-            else ConfigStore.get_config().get_rdt_iface()
+                else ConfigStore.get_config().get_rdt_iface()
         mba_ctrl_enabled = data['mba_ctrl']['enabled'] if 'mba_ctrl' in data \
-            else ConfigStore.get_config().get_mba_ctrl_enabled()
+                else ConfigStore.get_config().get_mba_ctrl_enabled()
 
         if mba_ctrl_enabled and rdt_iface != "os":
             raise ValueError("RDT Configuration. MBA CTRL requires RDT OS interface!")
@@ -317,7 +318,7 @@ class ConfigStore:
         if mba_ctrl_enabled and not caps.mba_bw_supported():
             raise ValueError("RDT Configuration. MBA CTRL requested but not supported!")
 
-        if not 'pools' in data:
+        if 'pools' not in data:
             return
 
         mba_pool_ids = []
@@ -338,7 +339,7 @@ class ConfigStore:
 
         if mba_pool_ids and mba_ctrl_enabled:
             raise ValueError(f"Pools {mba_pool_ids}, MBA % is not enabled. " \
-                             "Disable MBA BW and try again.")
+                                 "Disable MBA BW and try again.")
 
         return
 
@@ -543,18 +544,12 @@ class ConfigStore:
 
         data = ConfigStore.get_config()
 
-        # put all pool ids into list
-        pool_ids = []
-        for pool in data['pools']:
-            pool_ids.append(pool['id'])
-
+        pool_ids = [pool['id'] for pool in data['pools']]
         # no pool found in config, return highest id
         if not pool_ids:
             return max_cos_id
 
-        # find highest available id
-        new_ids = list(set(range(1, max_cos_id + 1)) - set(pool_ids))
-        if new_ids:
+        if new_ids := list(set(range(1, max_cos_id + 1)) - set(pool_ids)):
             new_ids.sort()
             return new_ids[-1]
 
@@ -576,22 +571,15 @@ class ConfigStore:
         if 'apps' not in data:
             return 0
 
-        # put all ids into list
-        app_ids = []
-        for app in data['apps']:
-            app_ids.append(app['id'])
-        app_ids = sorted(app_ids)
-        # no app found in config
-        if not app_ids:
+        app_ids = [app['id'] for app in data['apps']]
+        if app_ids := sorted(app_ids):
+            return (
+                new_ids[0]
+                if (new_ids := list(set(range(1, app_ids[-1])) - set(app_ids)))
+                else app_ids[-1] + 1
+            )
+        else:
             return 0
-
-        # add new app to apps
-        # find an id
-        new_ids = list(set(range(1, app_ids[-1])) - set(app_ids))
-        if new_ids:
-            return new_ids[0]
-
-        return app_ids[-1] + 1
 
 
     @staticmethod
@@ -609,20 +597,16 @@ class ConfigStore:
         if 'power_profiles' not in data:
             return 0
 
-        # put all ids into list
-        profile_ids = []
-        for profile in data['power_profiles']:
-            profile_ids.append(profile['id'])
-
-        profile_ids = sorted(profile_ids)
-
-        # no profile found in config
-        if not profile_ids:
+        profile_ids = [profile['id'] for profile in data['power_profiles']]
+        if profile_ids := sorted(profile_ids):
+            return (
+                new_ids[0]
+                if (
+                    new_ids := list(
+                        set(range(1, profile_ids[-1])) - set(profile_ids)
+                    )
+                )
+                else profile_ids[-1] + 1
+            )
+        else:
             return 1
-
-        # find first available profile id
-        new_ids = list(set(range(1, profile_ids[-1])) - set(profile_ids))
-        if new_ids:
-            return new_ids[0]
-
-        return profile_ids[-1] + 1

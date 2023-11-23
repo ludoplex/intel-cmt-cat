@@ -64,5 +64,7 @@ def check_link(path, flags):
         an open file descriptor
     """
     if os.path.islink(path):
-        raise PermissionError(errno.EPERM, os.strerror(errno.EPERM) + ". Is a link.", path)
+        raise PermissionError(
+            errno.EPERM, f"{os.strerror(errno.EPERM)}. Is a link.", path
+        )
     return os.open(path, flags)

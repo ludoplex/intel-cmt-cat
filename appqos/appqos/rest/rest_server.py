@@ -122,10 +122,10 @@ class Server:
         self.api.add_resource(CapsMbaCtrl, '/caps/mba_ctrl')
 
         # L3 CAT API
-        self.api.add_resource(CapsL3ca, '/caps/' + common.CAT_L3_CAP)
+        self.api.add_resource(CapsL3ca, f'/caps/{common.CAT_L3_CAP}')
 
         # L2 CAT API
-        self.api.add_resource(CapsL2ca, '/caps/' + common.CAT_L2_CAP)
+        self.api.add_resource(CapsL2ca, f'/caps/{common.CAT_L2_CAP}')
 
         # Reset API
         self.api.add_resource(Reset, '/reset')
@@ -149,10 +149,7 @@ class Server:
                 return False
 
             ca_cert = path / TLS_CA_CERT_FILE
-            if not ca_cert.is_file():
-                return False
-
-            return True
+            return bool(ca_cert.is_file())
 
         # current working directory
         path = Path("ca")

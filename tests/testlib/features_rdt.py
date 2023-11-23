@@ -83,9 +83,7 @@ class FeaturesRdt:
             "rdt_a": self.is_rdt_allocation_supported(),
         }
 
-        feature_list = [feature for feature, supported in result.items() \
-                        if supported]
-        return feature_list
+        return [feature for feature, supported in result.items() if supported]
 
 
 class FeaturesRdtMsr(FeaturesRdt):

@@ -132,10 +132,7 @@ class CPqosMonData(ctypes.Structure):
         }
 
         counter = event_counter_map.get(event)
-        if not counter:
-            return None
-
-        return getattr(self.values, counter, None)
+        return None if not counter else getattr(self.values, counter, None)
 
 
 def _get_event_mask(events):

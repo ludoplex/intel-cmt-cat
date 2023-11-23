@@ -100,7 +100,7 @@ class TestCapsMba:
                 assert param in data
 
             assert data['clos_num'] == 8
-            assert not data['mba_enabled'] == mba_bw_enabled
+            assert data['mba_enabled'] != mba_bw_enabled
             assert data['mba_bw_enabled'] == mba_bw_enabled
 
 
@@ -379,12 +379,10 @@ class TestCapsIface:
             assert data['rdt_iface']['interface'] == iface
 
         def get_rdt_iface():
-            if iface == "msr":
-                return "os"
-            return "msr"
+            return "os" if iface == "msr" else "msr"
 
         with mock.patch("appqos.config_store.ConfigStore.set_config", new=set_config) as mock_set_config, \
-             mock.patch("appqos.config.Config.get_rdt_iface", return_value=get_rdt_iface):
+                 mock.patch("appqos.config.Config.get_rdt_iface", return_value=get_rdt_iface):
             response = Rest().put("/caps/rdt_iface", {"interface": iface})
 
             # All OK, Requested RDT interface supported and no pool configured

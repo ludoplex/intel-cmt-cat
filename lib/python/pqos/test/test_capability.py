@@ -70,45 +70,58 @@ class PqosCapMockBuilder(object):
 
         mon_mem_size = ctypes.sizeof(CPqosCapabilityMonitoring)
         events = (CPqosMonitor * 0)()
-        mon = CPqosCapabilityMonitoring(mem_size=mon_mem_size, max_rmid=0,
-                                        l3_size=0, num_events=0, events=events)
-        return mon
+        return CPqosCapabilityMonitoring(
+            mem_size=mon_mem_size,
+            max_rmid=0,
+            l3_size=0,
+            num_events=0,
+            events=events,
+        )
 
     def build_l3ca_capability(self):
         """
         Builds mock CPqosCapabilityL3 object. Might be overwritten
         in a subclass if necessary.
         """
-        # pylint: disable=no-self-use
-
-        l3ca = CPqosCapabilityL3(mem_size=ctypes.sizeof(CPqosCapabilityL3),
-                                 num_classes=2, num_ways=8, way_size=1024*1024,
-                                 way_contention=0, cdp=1, cdp_on=0)
-        return l3ca
+        return CPqosCapabilityL3(
+            mem_size=ctypes.sizeof(CPqosCapabilityL3),
+            num_classes=2,
+            num_ways=8,
+            way_size=1024 * 1024,
+            way_contention=0,
+            cdp=1,
+            cdp_on=0,
+        )
 
     def build_l2ca_capability(self):
         """
         Builds mock CPqosCapabilityL2 object. Might be overwritten
         in a subclass if necessary.
         """
-        # pylint: disable=no-self-use
-
-        l2ca = CPqosCapabilityL2(mem_size=ctypes.sizeof(CPqosCapabilityL3),
-                                 num_classes=2, num_ways=8, way_size=1024*1024,
-                                 way_contention=0, cdp=1, cdp_on=0)
-        return l2ca
+        return CPqosCapabilityL2(
+            mem_size=ctypes.sizeof(CPqosCapabilityL3),
+            num_classes=2,
+            num_ways=8,
+            way_size=1024 * 1024,
+            way_contention=0,
+            cdp=1,
+            cdp_on=0,
+        )
 
     def build_mba_capability(self):
         """
         Builds mock CPqosCapabilityMBA object. Might be overwritten
         in a subclass if necessary.
         """
-        # pylint: disable=no-self-use
-
-        mba = CPqosCapabilityMBA(mem_size=ctypes.sizeof(CPqosCapabilityMBA),
-                                 num_classes=2, throttle_max=95, throttle_step=15,
-                                 is_linear=1, ctrl=1, ctrl_on=0)
-        return mba
+        return CPqosCapabilityMBA(
+            mem_size=ctypes.sizeof(CPqosCapabilityMBA),
+            num_classes=2,
+            throttle_max=95,
+            throttle_step=15,
+            is_linear=1,
+            ctrl=1,
+            ctrl_on=0,
+        )
 
     def build_capabilities(self):
         """

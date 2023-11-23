@@ -68,10 +68,7 @@ def is_sstbf_enabled():
     Returns SST-BF enabled status
     """
     sys = power_common.get_pwr_sys()
-    if not sys:
-        return None
-
-    return sys.sst_bf_enabled
+    return None if not sys else sys.sst_bf_enabled
 
 
 def is_sstbf_configured():
@@ -95,11 +92,7 @@ def configure_sstbf(configure):
     if not sys:
         return -1
 
-    if configure:
-        new_core_cfg = PWR_CFG_SST_BF
-    else:
-        new_core_cfg = PWR_CFG_BASE
-
+    new_core_cfg = PWR_CFG_SST_BF if configure else PWR_CFG_BASE
     sys.commit(new_core_cfg)
 
     log.sys(f"Intel SST-BF {'' if configure else 'un'}configured.")

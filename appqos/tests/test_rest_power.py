@@ -127,14 +127,13 @@ class TestRestPowerProfiles:
                     assert profile != put_profile
                     break
 
-        with mock.patch("appqos.config_store.ConfigStore.set_config", side_effect=set_config) as mock_set_config,\
-            mock.patch("appqos.config_store.ConfigStore.validate"):
+        with (mock.patch("appqos.config_store.ConfigStore.set_config", side_effect=set_config) as mock_set_config, mock.patch("appqos.config_store.ConfigStore.validate")):
             for key, value in put_profile.items():
 
                 if key in ["min_freq", "max_freq"]:
                     value +=100
                 elif key in ["epp", "name"]:
-                    value = value + "_test"
+                    value = f"{value}_test"
 
                 response = Rest().put("/power_profiles/{}".format(put_profile['id']), {key: value})
                 if key == "id":
@@ -144,14 +143,13 @@ class TestRestPowerProfiles:
                     mock_set_config.assert_called()
 
 
-        with mock.patch("appqos.config_store.ConfigStore.validate", side_effect = Exception('Test Exception!')),\
-            mock.patch("appqos.config_store.ConfigStore.set_config") as mock_set_config:
+        with (mock.patch("appqos.config_store.ConfigStore.validate", side_effect = Exception('Test Exception!')), mock.patch("appqos.config_store.ConfigStore.set_config") as mock_set_config):
             for key, value in put_profile.items():
 
                 if key in ["min_freq", "max_freq"]:
                     value +=100
                 elif key in ["epp", "name"]:
-                    value = value + "_test"
+                    value = f"{value}_test"
 
                 response = Rest().put("/power_profiles/{}".format(put_profile['id']), {key: value})
                 assert response.status_code == 400
@@ -168,19 +166,18 @@ class TestRestPowerProfiles:
         data = json.loads(response.data.decode('utf-8'))
         assert CONFIG['power_profiles'] == data
 
-        ids = []
-        for profile in CONFIG['power_profiles']:
-            ids.append(profile['id'])
-
+        ids = [profile['id'] for profile in CONFIG['power_profiles']]
         assert ids
 
-        response = Rest().get("/power_profiles/{}".format(sorted(ids)[-1] + 1))
+        response = Rest().get(f"/power_profiles/{sorted(ids)[-1] + 1}")
         assert response.status_code == 404
 
-        response = Rest().delete("/power_profiles/{}".format(sorted(ids)[-1] + 1))
+        response = Rest().delete(f"/power_profiles/{sorted(ids)[-1] + 1}")
         assert response.status_code == 404
 
-        response = Rest().put("/power_profiles/{}".format(sorted(ids)[-1] + 1), {"name": "Test"})
+        response = Rest().put(
+            f"/power_profiles/{sorted(ids)[-1] + 1}", {"name": "Test"}
+        )
         assert response.status_code == 404
 
 
@@ -195,13 +192,13 @@ class TestRestPowerProfiles:
         assert not data
 
         for id in range(5):
-            response = Rest().get("/power_profiles/{}".format(id))
+            response = Rest().get(f"/power_profiles/{id}")
             assert response.status_code == 404
 
-            response = Rest().delete("/power_profiles/{}".format(id))
+            response = Rest().delete(f"/power_profiles/{id}")
             assert response.status_code == 404
 
-            response = Rest().put("/power_profiles/{}".format(id), {"name": "Test"})
+            response = Rest().put(f"/power_profiles/{id}", {"name": "Test"})
             assert response.status_code == 404
 
 
@@ -210,13 +207,13 @@ class TestRestPowerProfiles:
     @pytest.mark.parametrize("invalid_id", ["a", "test", "-1"])
     def test_invalid_index(self, invalid_id):
 
-        response = Rest().get("/power_profiles/{}".format(invalid_id))
+        response = Rest().get(f"/power_profiles/{invalid_id}")
         assert response.status_code == 404
 
-        response = Rest().delete("/power_profiles/{}".format(invalid_id))
+        response = Rest().delete(f"/power_profiles/{invalid_id}")
         assert response.status_code == 404
 
-        response = Rest().put("/power_profiles/{}".format(invalid_id), {"name": "Test"})
+        response = Rest().put(f"/power_profiles/{invalid_id}", {"name": "Test"})
         assert response.status_code == 404
 
 
@@ -245,7 +242,7 @@ class TestRestPowerProfiles:
 
         assert valid_id is not None
 
-        response = Rest().put("/power_profiles/{}".format(valid_id), invalid_request)
+        response = Rest().put(f"/power_profiles/{valid_id}", invalid_request)
         assert response.status_code == 400
 
         response = Rest().post("/power_profiles", invalid_request)
@@ -264,13 +261,13 @@ class TestRestPowerProfiles:
             for profile in config['power_profiles']:
                 if profile['id'] == post_profile_id:
                     temp_profile = deepcopy(post_profile)
-                    temp_profile.update({"id": post_profile_id})
+                    temp_profile["id"] = post_profile_id
                     assert profile == temp_profile
                     break
 
         with mock.patch("appqos.config_store.ConfigStore.set_config", side_effect=set_config) as mock_set_config,\
-            mock.patch("appqos.config_store.ConfigStore.get_new_power_profile_id", return_value=post_profile_id) as mock_get_id,\
-            mock.patch("appqos.config_store.ConfigStore.validate") as mock_validate:
+                mock.patch("appqos.config_store.ConfigStore.get_new_power_profile_id", return_value=post_profile_id) as mock_get_id,\
+                mock.patch("appqos.config_store.ConfigStore.validate") as mock_validate:
                 response = Rest().post("/power_profiles", post_profile)
                 assert response.status_code == 201
                 mock_set_config.assert_called()
@@ -278,8 +275,8 @@ class TestRestPowerProfiles:
                 mock_get_id.assert_called()
 
         with mock.patch("appqos.config_store.ConfigStore.set_config") as mock_set_config,\
-            mock.patch("appqos.config_store.ConfigStore.get_new_power_profile_id", return_value=post_profile_id) as mock_get_id,\
-            mock.patch("appqos.config_store.ConfigStore.validate", side_effect = Exception('Test Exception!')) as mock_validate:
+                mock.patch("appqos.config_store.ConfigStore.get_new_power_profile_id", return_value=post_profile_id) as mock_get_id,\
+                mock.patch("appqos.config_store.ConfigStore.validate", side_effect = Exception('Test Exception!')) as mock_validate:
                 response = Rest().post("/power_profiles", post_profile)
                 assert response.status_code == 400
                 mock_validate.assert_called()
@@ -317,7 +314,7 @@ class TestRestPowerProfiles:
         profile_ids = []
 
         for profile in CONFIG['power_profiles']:
-            response = Rest().get("/power_profiles/{}".format(profile['id']))
+            response = Rest().get(f"/power_profiles/{profile['id']}")
             assert response.status_code == 200
 
             data = json.loads(response.data.decode('utf-8'))
@@ -325,17 +322,17 @@ class TestRestPowerProfiles:
 
             profile_ids.append(profile['id'])
 
-            with mock.patch("appqos.config_store.ConfigStore.set_config") as mock_set_config,\
-                mock.patch("appqos.config_store.ConfigStore.validate") as mock_validate:
-                    response = Rest().put("/power_profiles/{}".format(profile['id']), {"name": "Test_name"})
-                    assert response.status_code == 405
-                    mock_set_config.assert_not_called()
-                    mock_validate.assert_not_called()
+            with (mock.patch("appqos.config_store.ConfigStore.set_config") as mock_set_config, mock.patch("appqos.config_store.ConfigStore.validate") as mock_validate):
+                response = Rest().put(
+                    f"/power_profiles/{profile['id']}", {"name": "Test_name"}
+                )
+                assert response.status_code == 405
+                mock_set_config.assert_not_called()
+                mock_validate.assert_not_called()
 
         for id in profile_ids:
-            with mock.patch("appqos.config_store.ConfigStore.set_config") as mock_set_config,\
-                mock.patch("appqos.config_store.ConfigStore.validate") as mock_validate:
-                    response = Rest().delete("/power_profiles/{}".format(id))
-                    assert response.status_code == 405
-                    mock_set_config.assert_not_called()
-                    mock_validate.assert_not_called()
+            with (mock.patch("appqos.config_store.ConfigStore.set_config") as mock_set_config, mock.patch("appqos.config_store.ConfigStore.validate") as mock_validate):
+                response = Rest().delete(f"/power_profiles/{id}")
+                assert response.status_code == 405
+                mock_set_config.assert_not_called()
+                mock_validate.assert_not_called()

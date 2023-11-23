@@ -98,8 +98,7 @@ def parse_args():
     parser.add_argument('cores', metavar='CORE', type=int, nargs='*',
                         help='a core to be associated')
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 class PqosContextManager:
