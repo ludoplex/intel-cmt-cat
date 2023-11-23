@@ -72,10 +72,7 @@ class PqosDevInfo:
 
         result = func(self.p_devinfo, segment, bdf, virtual_channel)
 
-        if result == 0:
-            return None
-
-        return result
+        return None if result == 0 else result
 
     def get_channel_ids(self, segment, bdf):
         """
@@ -129,8 +126,4 @@ class PqosDevInfo:
 
         p_item = func(self.p_devinfo, channel_id)
 
-        if not p_item:
-            return None
-
-        item = p_item.contents
-        return item
+        return None if not p_item else p_item.contents

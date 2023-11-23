@@ -299,8 +299,7 @@ def parse_args():
     parser.add_argument('cores_pids', metavar='CORE/PID', type=int, nargs='+',
                         help='a core or PID to be monitored')
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 def validate(params):

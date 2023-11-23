@@ -83,11 +83,7 @@ def _get_array_items(count, p_items):
         a list of elements
     """
 
-    if not count:
-        return []
-
-    items = [p_items[i] for i in range(count)]
-    return items
+    return [] if not count else [p_items[i] for i in range(count)]
 
 
 class PqosCpuInfo(object):
@@ -163,10 +159,7 @@ class PqosCpuInfo(object):
 
         if vendor == CPqosCpuInfo.PQOS_VENDOR_INTEL:
             return "INTEL"
-        if vendor == CPqosCpuInfo.PQOS_VENDOR_AMD:
-            return "AMD"
-
-        return "UNKNOWN"
+        return "AMD" if vendor == CPqosCpuInfo.PQOS_VENDOR_AMD else "UNKNOWN"
 
     def get_sockets(self):
         """
@@ -235,13 +228,14 @@ class PqosCpuInfo(object):
             raise PqosError('Core information not found')
 
         coreinfo_struct = p_coreinfo.contents
-        coreinfo = PqosCoreInfo(core=coreinfo_struct.lcore,
-                                socket=coreinfo_struct.socket,
-                                l3_id=coreinfo_struct.l3_id,
-                                l2_id=coreinfo_struct.l2_id,
-                                l3cat_id=coreinfo_struct.l3cat_id,
-                                mba_id=coreinfo_struct.mba_id)
-        return coreinfo
+        return PqosCoreInfo(
+            core=coreinfo_struct.lcore,
+            socket=coreinfo_struct.socket,
+            l3_id=coreinfo_struct.l3_id,
+            l2_id=coreinfo_struct.l2_id,
+            l3cat_id=coreinfo_struct.l3cat_id,
+            mba_id=coreinfo_struct.mba_id,
+        )
 
 
     def get_cache_info(self, level):

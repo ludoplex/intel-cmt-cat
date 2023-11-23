@@ -104,10 +104,10 @@ class Test:
     def cmd(iface, app, params):
         command = app
         if iface == "OS":
-            command = command + " --iface=os"
+            command = f"{command} --iface=os"
         elif iface == "MSR":
-            command = command + " --iface=msr"
-        command = command + " " + params
+            command = f"{command} --iface=msr"
+        command = f"{command} {params}"
 
         return command
 
@@ -148,10 +148,7 @@ class Test:
             return []
 
         try:
-            children = []
             process = psutil.Process(int(pid))
-            for child in process.children(recursive=True):
-                children.append(child.pid)
-            return children
+            return [child.pid for child in process.children(recursive=True)]
         except Exception:
             return []

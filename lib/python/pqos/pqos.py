@@ -118,11 +118,7 @@ class Pqos(object):
         if not log_file and not log_callback:
             log_file = sys.stdout
 
-        if log_file:
-            cfg_fd_log = log_file.fileno()
-        else:
-            cfg_fd_log = None
-
+        cfg_fd_log = log_file.fileno() if log_file else None
         if log_callback:
             def pqos_log_callback_wrapper(callback):
                 """

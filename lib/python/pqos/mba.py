@@ -81,8 +81,7 @@ class PqosMba(object):
         ret = self.pqos.lib.pqos_mba_set(socket, num_cos, cos_arr, actual_arr)
         pqos_handle_error('pqos_mba_set', ret)
 
-        actual = [cos.to_cos(self.COS) for cos in actual_arr]
-        return actual
+        return [cos.to_cos(self.COS) for cos in actual_arr]
 
     def get(self, socket):
         """
@@ -106,5 +105,4 @@ class PqosMba(object):
                                          ctypes.byref(num_cos), cos_arr)
         pqos_handle_error('pqos_mba_get', ret)
 
-        coses = [cos_arr[i].to_cos(self.COS) for i in range(num_cos.value)]
-        return coses
+        return [cos_arr[i].to_cos(self.COS) for i in range(num_cos.value)]

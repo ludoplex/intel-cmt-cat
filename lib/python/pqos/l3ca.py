@@ -85,8 +85,7 @@ class PqosCatL3(object):
         ret = self.pqos.lib.pqos_l3ca_get(socket, cos_num, num_ca_ref, l3cas)
         pqos_handle_error('pqos_l3ca_get', ret)
 
-        coses = [l3ca.to_cos(self.COS) for l3ca in l3cas[:num_ca.value]]
-        return coses
+        return [l3ca.to_cos(self.COS) for l3ca in l3cas[:num_ca.value]]
 
     def get_min_cbm_bits(self):
         """Gets minimum number of bits which must be set in L3 way mask when

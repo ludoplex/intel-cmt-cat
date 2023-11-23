@@ -98,10 +98,7 @@ def get_pwr_lowest_freq():
     """
 
     cpus = get_pwr_cpus()
-    if not cpus:
-        return None
-
-    return cpus[0].lowest_freq
+    return None if not cpus else cpus[0].lowest_freq
 
 
 def get_pwr_base_freq():
@@ -110,10 +107,7 @@ def get_pwr_base_freq():
     """
 
     cpus = get_pwr_cpus()
-    if not cpus:
-        return None
-
-    return cpus[0].base_freq
+    return None if not cpus else cpus[0].base_freq
 
 
 def get_pwr_highest_freq():
@@ -122,7 +116,4 @@ def get_pwr_highest_freq():
     """
 
     cpus = get_pwr_cpus()
-    if not cpus:
-        return None
-
-    return cpus[0].highest_freq
+    return None if not cpus else cpus[0].highest_freq

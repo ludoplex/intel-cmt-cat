@@ -222,7 +222,7 @@ class CapsRdtIface(Resource):
         except (jsonschema.ValidationError, OverflowError) as error:
             raise BadRequest("Request validation failed") from error
 
-        if not json_data['interface'] in caps.caps_iface():
+        if json_data['interface'] not in caps.caps_iface():
             raise BadRequest(f"RDT interface '{json_data['interface']}' not supported!")
 
         cfg = ConfigStore.get_config()

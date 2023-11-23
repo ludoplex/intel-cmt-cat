@@ -234,8 +234,7 @@ class PqosCap(object):
         pqos_handle_error('pqos_cap_get_type', ret)
 
         cap_item = p_cap_item.contents
-        capability = _get_capability(cap_item, type_str)
-        return capability
+        return _get_capability(cap_item, type_str)
 
     def get_l3ca_cos_num(self):
         """

@@ -106,8 +106,7 @@ def parse_args():
                         const='OS', default='MSR',
                         help='select library OS interface')
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 class PqosContextManager:

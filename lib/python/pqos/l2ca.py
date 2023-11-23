@@ -86,8 +86,7 @@ class PqosCatL2(object):
         ret = self.pqos.lib.pqos_l2ca_get(l2id, cos_num, num_ca_ref, l2cas)
         pqos_handle_error('pqos_l2ca_get', ret)
 
-        coses = [l2ca.to_cos(self.COS) for l2ca in l2cas[:num_ca.value]]
-        return coses
+        return [l2ca.to_cos(self.COS) for l2ca in l2cas[:num_ca.value]]
 
     def get_min_cbm_bits(self):
         """Gets minimum number of bits which must be set in L2 way mask when

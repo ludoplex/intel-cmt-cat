@@ -276,11 +276,14 @@ class CPqosIordtConfig:
             native representation of configuration or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_label == label:
-                return cfg_value
-
-        return None
+        return next(
+            (
+                cfg_value
+                for cfg_label, cfg_value in cls.values
+                if cfg_label == label
+            ),
+            None,
+        )
 
     @classmethod
     def get_label(cls, value):
@@ -294,11 +297,14 @@ class CPqosIordtConfig:
             label: a text label or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_value == value:
-                return cfg_label
-
-        return None
+        return next(
+            (
+                cfg_label
+                for cfg_label, cfg_value in cls.values
+                if cfg_value == value
+            ),
+            None,
+        )
 
 class CPqosChannel(ctypes.Structure):
     "pqos_channel structure"
@@ -385,11 +391,14 @@ class CPqosFeatureConfig:
             native representation of configuration or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_label == label:
-                return cfg_value
-
-        return None
+        return next(
+            (
+                cfg_value
+                for cfg_label, cfg_value in cls.values
+                if cfg_label == label
+            ),
+            None,
+        )
 
     @classmethod
     def get_label(cls, value):
@@ -403,11 +412,14 @@ class CPqosFeatureConfig:
             label: a text label or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_value == value:
-                return cfg_label
-
-        return None
+        return next(
+            (
+                cfg_label
+                for cfg_label, cfg_value in cls.values
+                if cfg_value == value
+            ),
+            None,
+        )
 
 class CPqosCdpConfig(CPqosFeatureConfig):
     "pqos_cdp_config enumeration"
@@ -444,11 +456,14 @@ class CPqosMbaConfig:
             native representation of configuration or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_label == label:
-                return cfg_value
-
-        return None
+        return next(
+            (
+                cfg_value
+                for cfg_label, cfg_value in cls.values
+                if cfg_label == label
+            ),
+            None,
+        )
 
     @classmethod
     def get_label(cls, value):
@@ -462,11 +477,14 @@ class CPqosMbaConfig:
             label: a text label or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_value == value:
-                return cfg_label
-
-        return None
+        return next(
+            (
+                cfg_label
+                for cfg_label, cfg_value in cls.values
+                if cfg_value == value
+            ),
+            None,
+        )
 
 class CPqosAllocConfig(ctypes.Structure):
     "pqos_alloc_config structure"
@@ -690,11 +708,14 @@ class CPqosSNCConfig:
             native representation of configuration or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_label == label:
-                return cfg_value
-
-        return None
+        return next(
+            (
+                cfg_value
+                for cfg_label, cfg_value in cls.values
+                if cfg_label == label
+            ),
+            None,
+        )
 
     @classmethod
     def get_label(cls, value):
@@ -706,11 +727,14 @@ class CPqosSNCConfig:
             label: a text label or None
         """
 
-        for cfg_label, cfg_value in cls.values:
-            if cfg_value == value:
-                return cfg_label
-
-        return None
+        return next(
+            (
+                cfg_label
+                for cfg_label, cfg_value in cls.values
+                if cfg_value == value
+            ),
+            None,
+        )
 
 class CPqosMonConfig(ctypes.Structure):
     "pqos_mon_config structure"

@@ -114,11 +114,7 @@ def test_config_recreate_default_pool(def_pool_def):
 def test_config_get_new_pool_id(mock_get_config):
 
     def get_max_cos_id(alloc_type):
-        if 'mba' in alloc_type:
-            return 9
-        else:
-            return 31
-
+        return 9 if 'mba' in alloc_type else 31
 
     with mock.patch('appqos.pqos_api.PQOS_API.get_max_cos_id', new=get_max_cos_id):
         config_store = ConfigStore()
@@ -142,15 +138,7 @@ def test_config_get_new_pool_id(mock_get_config):
 def test_config_reset():
     from copy import deepcopy
 
-    with mock.patch('appqos.pqos_api.PQOS_API.get_cores') as mock_get_cores,\
-         mock.patch('appqos.config_store.ConfigStore.load') as mock_load,\
-         mock.patch('appqos.caps.mba_supported', return_value = True) as mock_mba,\
-         mock.patch('appqos.caps.cat_l3_supported', return_value = True),\
-         mock.patch('appqos.caps.cat_l2_supported', return_value = True),\
-         mock.patch('appqos.pqos_api.PQOS_API.get_max_l3_cat_cbm', return_value = 0xFFF),\
-         mock.patch('appqos.pqos_api.PQOS_API.get_max_l2_cat_cbm', return_value = 0xFF),\
-         mock.patch('appqos.pqos_api.PQOS_API.check_core', return_value = True),\
-         mock.patch('appqos.pid_ops.is_pid_valid', return_value = True):
+    with (mock.patch('appqos.pqos_api.PQOS_API.get_cores') as mock_get_cores, mock.patch('appqos.config_store.ConfigStore.load') as mock_load, mock.patch('appqos.caps.mba_supported', return_value = True) as mock_mba, mock.patch('appqos.caps.cat_l3_supported', return_value = True), mock.patch('appqos.caps.cat_l2_supported', return_value = True), mock.patch('appqos.pqos_api.PQOS_API.get_max_l3_cat_cbm', return_value = 0xFFF), mock.patch('appqos.pqos_api.PQOS_API.get_max_l2_cat_cbm', return_value = 0xFF), mock.patch('appqos.pqos_api.PQOS_API.check_core', return_value = True), mock.patch('appqos.pid_ops.is_pid_valid', return_value = True)):
 
         mock_load.return_value = Config(deepcopy(CONFIG))
         mock_get_cores.return_value = range(8)
@@ -165,7 +153,10 @@ def test_config_reset():
         assert config_store.get_config().get_pool_attr('mba', 0) == 100
 
         # test get_pool_attr
-        assert config_store.get_config().get_pool_attr('non_exisiting_key', None) == None
+        assert (
+            config_store.get_config().get_pool_attr('non_exisiting_key', None)
+            is None
+        )
 
         # reset mock and change return values
         # more cores this time (8 vs. 16)

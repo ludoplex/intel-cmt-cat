@@ -119,10 +119,7 @@ def is_sstcp_enabled():
     """
 
     pwr_sys = power_common.get_pwr_sys()
-    if not pwr_sys:
-        return False
-
-    return pwr_sys.sst_bf_enabled and pwr_sys.epp_enabled
+    return False if not pwr_sys else pwr_sys.sst_bf_enabled and pwr_sys.epp_enabled
 
 
 def _is_min_freq_valid(freq):
@@ -135,13 +132,7 @@ def _is_min_freq_valid(freq):
     """
 
     lowest_freq = power_common.get_pwr_lowest_freq()
-    if not lowest_freq:
-        return None
-
-    if freq < lowest_freq:
-        return False
-
-    return True
+    return None if not lowest_freq else freq >= lowest_freq
 
 
 def _is_max_freq_valid(freq):
@@ -154,13 +145,7 @@ def _is_max_freq_valid(freq):
     """
 
     highest_freq = power_common.get_pwr_highest_freq()
-    if not highest_freq:
-        return None
-
-    if freq > highest_freq:
-        return False
-
-    return True
+    return None if not highest_freq else freq <= highest_freq
 
 
 def _is_epp_valid(epp):
@@ -182,7 +167,7 @@ def validate_power_profiles(data, admission_control):
         data: configuration (dict)
     """
 
-    if not 'power_profiles' in data:
+    if 'power_profiles' not in data:
         return
 
     # verify profiles
@@ -302,9 +287,7 @@ def configure_power(cfg):
             epp = profile.get('epp', None)
             _set_freqs_epp(profile['cores'], min_freq, max_freq, epp)
 
-    # reset power config for cores with no power profile assigned
-    cores_to_reset = _get_cores_to_reset(cfg)
-    if cores_to_reset:
+    if cores_to_reset := _get_cores_to_reset(cfg):
         reset(cores_to_reset)
 
     # save current profiles configuration
@@ -341,8 +324,7 @@ def _get_curr_profiles(cfg):
     # Get current power profiles configuration
     curr_profiles = {}
     for power_id in power_ids:
-        profile = cfg.get_power_profile(power_id)
-        if profile:
+        if profile := cfg.get_power_profile(power_id):
             curr_profiles[power_id] = deepcopy(profile)
             curr_profiles[power_id]['cores'] = []
         else:
@@ -382,8 +364,7 @@ def _get_cores_to_reset(cfg):
 
     for pool_id in pool_ids:
         if cfg.get_pool_attr('power_profile', pool_id) is None:
-            cores = cfg.get_pool_attr('cores', pool_id)
-            if cores:
+            if cores := cfg.get_pool_attr('cores', pool_id):
                 cores_to_reset.extend(cores)
 
     return cores_to_reset

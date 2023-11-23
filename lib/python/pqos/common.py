@@ -59,11 +59,7 @@ def get_mask_int(mask):
     "Returns a bitmask as an integer."
 
     if isinstance(mask, type('')):
-        if mask.lower().startswith('0x'):
-            return int(mask.lower(), 16)
-
-        return int(mask)
-
+        return int(mask.lower(), 16) if mask.lower().startswith('0x') else int(mask)
     if isinstance(mask, int):
         return mask
 
@@ -101,8 +97,7 @@ class COSBase(object):
         self.mask = get_mask_int(mask)
         self.code_mask = get_mask_int(code_mask)
         self.data_mask = get_mask_int(data_mask)
-        self.cdp = bool(code_mask is not None or \
-                   data_mask is not None)
+        self.cdp = code_mask is not None or data_mask is not None
 
     def __repr__(self):
         return f'COS(class_id={self.class_id}, mask={repr(self.mask)}, ' \

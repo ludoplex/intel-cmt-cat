@@ -126,13 +126,11 @@ def _get_technology_mask(technologies):
 
 def _get_list_of_cores(cores):
     core_array_len = len(cores)
-    core_array = (ctypes.c_uint * core_array_len)(*cores)
-    return core_array
+    return (ctypes.c_uint * core_array_len)(*cores)
 
 def _get_list_of_pids(pids):
     pid_array_len = len(pids)
-    pid_array = (ctypes.c_uint * pid_array_len)(*pids)
-    return pid_array
+    return (ctypes.c_uint * pid_array_len)(*pids)
 
 class PqosAlloc(object):
     """
@@ -305,9 +303,7 @@ class PqosAlloc(object):
 
         restype = ctypes.POINTER(ctypes.c_uint)
         self.pqos.lib.pqos_pid_get_pid_assoc.restype = restype
-        p_pids = self.pqos.lib.pqos_pid_get_pid_assoc(class_id, count_ref)
-
-        if p_pids:
+        if p_pids := self.pqos.lib.pqos_pid_get_pid_assoc(class_id, count_ref):
             pids = [p_pids[i] for i in range(count.value)]
             free_memory(p_pids)
         else:

@@ -580,7 +580,7 @@ class PqosApi:
         cos_nums = []
 
         if common.CAT_L2_CAP not in alloc_type and common.CAT_L3_CAP not in alloc_type and\
-        common.MBA_CAP not in alloc_type:
+            common.MBA_CAP not in alloc_type:
             return None
 
         if common.CAT_L2_CAP in alloc_type and not max_cos_l2cat:
@@ -601,10 +601,7 @@ class PqosApi:
         if common.MBA_CAP in alloc_type:
             cos_nums.append(max_cos_mba)
 
-        if not cos_nums:
-            return None
-
-        return min(cos_nums) - 1
+        return None if not cos_nums else min(cos_nums) - 1
 
     def get_max_l2_cat_cbm(self):
         """

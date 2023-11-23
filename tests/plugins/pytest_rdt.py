@@ -49,9 +49,7 @@ def pytest_configure(config):
     config.iface_msr = config.getoption("--iface-msr")
     config.iface_os = config.getoption("--iface-os")
 
-    env_path = config.getoption("--env")
-    # load env file
-    if env_path:
+    if env_path := config.getoption("--env"):
         Env().load(env_path)
 
     if not config.iface_os and not config.iface_msr:
@@ -82,9 +80,7 @@ def pytest_generate_tests(metafunc):
             req_iface.append("OS")
         if hasattr(metafunc.function, "iface_msr"):
             req_iface.append("MSR")
-        if not req_iface:
-            return ["MSR", "OS"]
-        return req_iface
+        return ["MSR", "OS"] if not req_iface else req_iface
 
     if 'iface' in metafunc.fixturenames:
         req_iface = get_req_iface()

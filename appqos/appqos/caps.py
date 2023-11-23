@@ -97,10 +97,7 @@ def caps_init(iface):
         sstcp_enabled()
     ]
 
-    if any(features) and PQOS_API.is_multicore():
-        return 0
-
-    return -1
+    return 0 if any(features) and PQOS_API.is_multicore() else -1
 
 
 def cat_l3_supported(iface):
@@ -227,12 +224,11 @@ def mba_info():
         MBA information
     """
 
-    info = {
+    return {
         'clos_num': PQOS_API.get_mba_num_cos(),
         'enabled': not mba_bw_enabled(),
-        'ctrl_enabled': mba_bw_enabled()
+        'ctrl_enabled': mba_bw_enabled(),
     }
-    return info
 
 
 def mba_ctrl_info():
@@ -245,11 +241,7 @@ def mba_ctrl_info():
         MBA CTRL information
     """
 
-    info = {
-        'supported': mba_bw_supported(),
-        'enabled': mba_bw_enabled()
-    }
-    return info
+    return {'supported': mba_bw_supported(), 'enabled': mba_bw_enabled()}
 
 
 def l3ca_info():
@@ -267,16 +259,15 @@ def l3ca_info():
     """
 
     rdt_api = PQOS_API
-    info = {
+    return {
         'cache_size': rdt_api.get_l3_cache_size(),
         'cache_way_size': rdt_api.get_l3_cache_way_size(),
         'cache_ways_num': rdt_api.get_l3_num_cache_ways(),
         'clos_num': rdt_api.get_l3ca_num_cos(),
         'cdp_supported': rdt_api.is_l3_cdp_supported(),
         'cdp_enabled': rdt_api.is_l3_cdp_enabled(),
-        'non_contiguous_cbm': rdt_api.get_l3_non_contiguous_cbm()
+        'non_contiguous_cbm': rdt_api.get_l3_non_contiguous_cbm(),
     }
-    return info
 
 
 def l2ca_info():
@@ -294,13 +285,12 @@ def l2ca_info():
     """
 
     rdt_api = PQOS_API
-    info = {
+    return {
         'cache_size': rdt_api.get_l2_cache_size(),
         'cache_way_size': rdt_api.get_l2_cache_way_size(),
         'cache_ways_num': rdt_api.get_l2_num_cache_ways(),
         'clos_num': rdt_api.get_l2ca_num_cos(),
         'cdp_supported': rdt_api.is_l2_cdp_supported(),
         'cdp_enabled': rdt_api.is_l2_cdp_enabled(),
-        'non_contiguous_cbm': rdt_api.get_l2_non_contiguous_cbm()
+        'non_contiguous_cbm': rdt_api.get_l2_non_contiguous_cbm(),
     }
-    return info

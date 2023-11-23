@@ -113,10 +113,7 @@ class Config(UserDict):
         Returns:
             configured RDT MBA CTRL Enabled value or "false" by default
         """
-        if 'mba_ctrl' in self.data:
-            return self.data['mba_ctrl']['enabled']
-
-        return False
+        return self.data['mba_ctrl']['enabled'] if 'mba_ctrl' in self.data else False
 
 
     def get_l3cdp_enabled(self):
@@ -126,10 +123,7 @@ class Config(UserDict):
         Returns:
             configured RDT L3 CDP Enabled value or "false" by default
         """
-        if 'rdt' in self.data:
-            return self.data['rdt'].get('l3cdp', False)
-
-        return False
+        return self.data['rdt'].get('l3cdp', False) if 'rdt' in self.data else False
 
 
     def get_l2cdp_enabled(self):
@@ -139,10 +133,7 @@ class Config(UserDict):
         Returns:
             configured RDT L2 CDP Enabled value or "false" by default
         """
-        if 'rdt' in self.data:
-            return self.data['rdt'].get('l2cdp', False)
-
-        return False
+        return self.data['rdt'].get('l2cdp', False) if 'rdt' in self.data else False
 
 
     def get_pool(self, pool_id):
@@ -177,11 +168,7 @@ class Config(UserDict):
         if 'pools' not in self.data:
             return False
 
-        for pool in self.data['pools']:
-            if not pool['id'] == 0:
-                return True
-
-        return False
+        return any(pool['id'] != 0 for pool in self.data['pools'])
 
 
     def is_default_pool_defined(self):
@@ -194,11 +181,7 @@ class Config(UserDict):
         if 'pools' not in self.data:
             return False
 
-        for pool in self.data['pools']:
-            if pool['id'] == 0:
-                return True
-
-        return False
+        return any(pool['id'] == 0 for pool in self.data['pools'])
 
 
     def remove_default_pool(self):
@@ -224,9 +207,7 @@ class Config(UserDict):
             self.data['pools'] = []
 
         # no Default pool configured
-        default_pool = {}
-        default_pool['id'] = 0
-
+        default_pool = {'id': 0}
         if caps.mba_supported(iface):
             if self.get_mba_ctrl_enabled():
                 default_pool['mba_bw'] = 2**32 - 1
@@ -251,7 +232,7 @@ class Config(UserDict):
         default_pool['cores'] = PQOS_API.get_cores()
         for pool in self.data['pools']:
             default_pool['cores'] = \
-                [core for core in default_pool['cores'] if core not in pool['cores']]
+                    [core for core in default_pool['cores'] if core not in pool['cores']]
 
         self.data['pools'].append(default_pool)
 
@@ -322,7 +303,7 @@ class Config(UserDict):
             return None
 
         for app in self.data['apps']:
-            if not ('id' in app and 'pids' in app):
+            if 'id' not in app or 'pids' not in app:
                 continue
             if pid in app['pids']:
                 return app['id']
@@ -341,7 +322,7 @@ class Config(UserDict):
         """
 
         for pool in self.data['pools']:
-            if not ('id' in pool and 'apps' in pool):
+            if 'id' not in pool or 'apps' not in pool:
                 continue
             if app in pool['apps']:
                 return pool['id']
@@ -373,7 +354,4 @@ class Config(UserDict):
             attribute value or None
         """
 
-        if attr not in self.data:
-            return default
-
-        return self.data[attr]
+        return default if attr not in self.data else self.data[attr]

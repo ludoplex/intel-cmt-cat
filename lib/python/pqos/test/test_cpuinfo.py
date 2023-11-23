@@ -56,20 +56,28 @@ class PqosCpuInfoMockBuilder(object):
     def build_l2_cache_info(self):  # pylint: disable=no-self-use
         "Builds L2 cache information."
 
-        cache_info = CPqosCacheInfo(detected=1, num_ways=2, num_sets=1,
-                                    num_partitions=1, line_size=64 * 1024,
-                                    total_size=2 * 1024 * 1024,
-                                    way_size=1024 * 1024)
-        return cache_info
+        return CPqosCacheInfo(
+            detected=1,
+            num_ways=2,
+            num_sets=1,
+            num_partitions=1,
+            line_size=64 * 1024,
+            total_size=2 * 1024 * 1024,
+            way_size=1024 * 1024,
+        )
 
     def build_l3_cache_info(self):  # pylint: disable=no-self-use
         "Builds L3 cache information."
 
-        cache_info = CPqosCacheInfo(detected=1, num_ways=2, num_sets=1,
-                                    num_partitions=1, line_size=64 * 1024,
-                                    total_size=2 * 1024 * 1024,
-                                    way_size=1024 * 1024)
-        return cache_info
+        return CPqosCacheInfo(
+            detected=1,
+            num_ways=2,
+            num_sets=1,
+            num_partitions=1,
+            line_size=64 * 1024,
+            total_size=2 * 1024 * 1024,
+            way_size=1024 * 1024,
+        )
 
     def build_core_infos(self):  # pylint: disable=no-self-use
         "Builds core information."

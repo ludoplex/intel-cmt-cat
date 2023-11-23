@@ -91,12 +91,12 @@ class Power(Resource):
             raise NotFound("No power profiles in config file")
 
         for power in data['power_profiles']:
-            if not power['id'] == int(profile_id):
+            if power['id'] != int(profile_id):
                 continue
 
             return power, 200
 
-        raise NotFound("Power profile " + str(profile_id) + " not found in config")
+        raise NotFound(f"Power profile {str(profile_id)} not found in config")
 
 
     @staticmethod
@@ -133,10 +133,10 @@ class Power(Resource):
             data['power_profiles'].remove(profile)
             ConfigStore.set_config(data)
 
-            res = {'message': "POWER PROFILE " + str(profile_id) + " deleted"}
+            res = {'message': f"POWER PROFILE {str(profile_id)} deleted"}
             return res, 200
 
-        raise NotFound("POWER PROFILE " + str(profile_id) + " not found in config")
+        raise NotFound(f"POWER PROFILE {str(profile_id)} not found in config")
 
 
     @staticmethod
@@ -183,7 +183,7 @@ class Power(Resource):
 
             ConfigStore.set_config(data)
 
-            res = {'message': "POWER PROFILE " + str(profile_id) + " updated"}
+            res = {'message': f"POWER PROFILE {str(profile_id)} updated"}
             return res, 200
 
         raise NotFound(f"POWER PROFILE {profile_id} not found in config")
@@ -207,10 +207,7 @@ class Powers(Resource):
             response, status code
         """
         data = ConfigStore.get_config()
-        if 'power_profiles' not in data:
-            return [], 200
-
-        return data['power_profiles'], 200
+        return (data['power_profiles'], 200) if 'power_profiles' in data else ([], 200)
 
 
     @staticmethod

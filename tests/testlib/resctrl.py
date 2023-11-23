@@ -66,11 +66,7 @@ class ResctrlSchemata:
                 if not match:
                     continue
 
-                if label == "MB":
-                    value = int(match.group(2), 10)
-                else:
-                    value = int(match.group(2), 16)
-
+                value = int(match.group(2), 10) if label == "MB" else int(match.group(2), 16)
                 self.data[label].append(value)
 
     def get(self, label, resource_id):
@@ -99,7 +95,6 @@ class Resctrl:
         return "resctrl" in output and self.root in output and "rw" in output
 
     def mount(self, cdp=False, cdpl2=False, mba_mbps=False):
-        options_str = ''
         options = []
 
         if cdp:
@@ -109,9 +104,7 @@ class Resctrl:
         if mba_mbps:
             options.append('mba_MBps')
 
-        if options:
-            options_str = ' -o ' + ','.join(options)
-
+        options_str = ' -o ' + ','.join(options) if options else ''
         command = f"mount -t resctrl resctrl{options_str} {self.root}"
         self.run_cmd(command)
         return self.is_mounted()
@@ -155,10 +148,7 @@ class Resctrl:
         output, exit_code = pexpect.run(command, withexitstatus=True)
 
         if exit_code == 0:
-            ctrl_group_count = 1
-
             command = f'bash -c "ls {RESCTRL_ROOT_PATH} | grep COS | wc -l"'
             output = pexpect.run(command)
-            ctrl_group_count += int(output)
-
+            ctrl_group_count = 1 + int(output)
         return ctrl_group_count

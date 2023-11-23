@@ -55,5 +55,4 @@ def ctypes_ref_set_uint(ref, num):
 def ctypes_build_array(arr):
     "Builds ctypes array out of ctypes objects."
 
-    arr_c = (type(arr[0]) * len(arr))(*arr)
-    return arr_c
+    return (type(arr[0]) * len(arr))(*arr)

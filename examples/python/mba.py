@@ -125,8 +125,7 @@ def parse_args():
     parser.add_argument('class_id', type=int, help='COS ID')
     parser.add_argument('mb_max', type=int, help='MBA rate')
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 class PqosContextManager:
